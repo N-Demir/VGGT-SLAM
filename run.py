@@ -48,8 +48,7 @@ app = modal.App("vggt-slam", image=modal.Image.from_dockerfile(Path(__file__).pa
     .run_commands("cd gtsam && mkdir -p build && cd build")
     .run_commands("cd gtsam/build && cmake .. -DGTSAM_BUILD_PYTHON=ON -DGTSAM_FORCE_STATIC_LIB=ON -DCMAKE_INSTALL_PREFIX=$(pwd)/../install -DCMAKE_POSITION_INDEPENDENT_CODE=ON")
     .run_commands("cd gtsam/build && make -j$(nproc)")
-    .run_commands("cd gtsam/build && pip install -e ../python/")
-    .run_commands("cd /root/workspace")
+    .run_commands("cd gtsam/build && pip install -e python/")
     # Clone and install Salad
     .run_commands("git clone https://github.com/Dominic101/salad.git")
     .run_commands("pip install -e ./salad")

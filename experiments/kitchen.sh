@@ -1,0 +1,1 @@
+python main.py --image_folder=~/data/examples/kitchen/images --vis_map --log_results
