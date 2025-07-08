@@ -1,1 +1,1 @@
-python main.py --image_folder=/root/workspace/data/examples/kitchen/images --vis_map --log_results
+python main.py --image_folder=/root/data/examples/kitchen/images --vis_map --log_results
