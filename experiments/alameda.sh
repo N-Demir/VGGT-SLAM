@@ -1,0 +1,1 @@
+python main.py --image_folder=/root/data/zipnerf/alameda/images_2/ --vis_map --log_results
