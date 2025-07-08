@@ -13,6 +13,13 @@ MODAL_VOLUMES = {
     "/root/output": modal.Volume.from_name("output", create_if_missing=True),
 }
 
+def dummy_function():
+    # Testing whether this could get models downloaded and cuda things prebuilt
+    # but needs to be placed into a python function unfortunately so that modal can properly
+    # run it with `run_function` and attach a volume
+    print("Running dummy function")
+    subprocess.run("python main.py --image_folder=~/data/does/not/exist/images", shell=True, cwd=".")
+
 
 app = modal.App("vggt-slam", image=modal.Image.from_dockerfile(Path(__file__).parent / "Dockerfile")
     # GCloud
@@ -57,6 +64,9 @@ app = modal.App("vggt-slam", image=modal.Image.from_dockerfile(Path(__file__).pa
     .run_commands("pip install -e ./vggt")
     # Install current repo in editable mode
     .run_commands("pip install -e .")
+    # # Post install, try actually running a demo example to prebuild/download things
+    .run_commands("git pull")
+    .run_function(dummy_function, secrets=MODAL_SECRETS, volumes=MODAL_VOLUMES, gpu="A100-80GB")
     # Get the latest code
     .run_commands("git pull", force_build=True)
 )
