@@ -38,7 +38,7 @@ def main():
     Main function that wraps the entire pipeline of VGGT-SLAM.
     """
     args = parser.parse_args()
-    use_optical_flow_downsample = True
+    use_optical_flow_downsample = False
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Using device: {device}")
 
