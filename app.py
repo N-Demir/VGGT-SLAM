@@ -19,7 +19,8 @@ def run_slam(
     submap_size=16,
     max_loops=1,
     min_disparity=50.0,
-    conf_threshold=25.0
+    conf_threshold=25.0,
+    export_colmap=False
 ):
     # Handle zip from Gradio
     zip_path = image_zip.name
@@ -83,7 +84,17 @@ def run_slam(
     num_submaps = solver.map.get_num_submaps()
     num_loops = solver.graph.get_num_loops()
     glb_path = solver.export_3d_scene()
-    message = f"VGGT-SLAM completed with {num_submaps} submaps and {num_loops} loop closures."
+    
+    # Export COLMAP format if requested
+    colmap_message = ""
+    if export_colmap:
+        colmap_dir = "colmap_output"
+        solver.map.write_colmap_format(
+            output_dir=colmap_dir
+        )
+        colmap_message = f"\nCOLMAP format exported to {colmap_dir}/"
+    
+    message = f"VGGT-SLAM completed with {num_submaps} submaps and {num_loops} loop closures.{colmap_message}"
     return glb_path, message
 
 
@@ -100,6 +111,7 @@ demo = gr.Interface(
         gr.Slider(0, 5, value=1, step=1, label="Max potential loop closures to add for each new submap"),
         gr.Slider(0.0, 100.0, value=50.0, step=1.0, label="Minimum disparity between keyframes"),
         gr.Slider(0.0, 100.0, value=25.0, step=1.0, label="Confidence Threshold (increasing will decrease number of points)"),
+        gr.Checkbox(label="Export COLMAP format", value=False),
     ],
     outputs=[model_output, status_output],
     examples=[["office_loop.zip"]],

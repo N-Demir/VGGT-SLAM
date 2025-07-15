@@ -30,6 +30,7 @@ parser.add_argument("--max_loops", type=int, default=1, help="Maximum number of 
 parser.add_argument("--min_disparity", type=float, default=50, help="Minimum disparity to generate a new keyframe")
 parser.add_argument("--use_point_map", action="store_true", help="Use point map instead of depth-based points")
 parser.add_argument("--conf_threshold", type=float, default=25.0, help="Initial percentage of low-confidence points to filter out")
+parser.add_argument("--colmap_output", type=str, default=None, help="Directory to save COLMAP format output (cameras.txt, images.txt, points3D.txt)")
 
 def main():
     """
@@ -116,6 +117,14 @@ def main():
         if not args.skip_dense_log:
             # Log the dense point cloud for each submap.
             solver.map.save_framewise_pointclouds(args.log_path.replace(".txt", "_logs"))
+
+    # Export COLMAP format if requested
+    if args.colmap_output:
+        print(f"Exporting COLMAP format to {args.colmap_output}")
+        solver.map.write_colmap_format(
+            output_dir=args.colmap_output,
+            image_names=image_names,  # Pass original image names for better file names
+        )
 
     if args.plot_focal_lengths:
         # Define a colormap
