@@ -122,7 +122,7 @@ class GraphMap:
         pcd_all.colors = o3d.utility.Vector3dVector(colors_all)
         o3d.io.write_point_cloud(file_name, pcd_all)
 
-    def write_colmap_format(self, output_dir, image_names=None):
+    def write_colmap_format(self, output_dir, image_names=None, max_points=10_000_000):
         """
         Export reconstruction in COLMAP format using read_write_model.py functions.
         Uses the same strategy as save_framewise_pointclouds for point cloud processing.
@@ -223,6 +223,12 @@ class GraphMap:
             except Exception as e:
                 print(f"Warning: Could not process point cloud for submap {submap.get_id()}: {e}")
         
+        # Randomly downsample points3D to be less than max_points
+        if len(points3D) > max_points:
+            keys = list(points3D.keys())
+            selected_keys = np.random.choice(keys, size=max_points, replace=False)
+            points3D = {k: points3D[k] for k in selected_keys}
+
         # Write COLMAP model using read_write_model functions
         write_model(cameras, images, points3D, output_dir)
         
