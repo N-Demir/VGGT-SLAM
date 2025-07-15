@@ -5,7 +5,8 @@ Interesting that it's called slam because it's borderline an offline procedure? 
 
 I added colmap format export, but it takes a long time. Presumably because writing the points takes a long time. 
 
-A lot of points are by default exported (1 for every image pixel, with a percentage filtered out based on confidence threshold). Would be interesting to see the confidence threshold and play around with it... We have way too many points compared to the number of eventual gaussians. Definitely need a smarter way to select the generated number of points. For now, maybe we change the 25 percentile to a 75 percentile and see how that looks in viser? Using a 95% confidence threshold leads to much fewer points though which is nice. However, these points are highly not geographically spread out... Maybe we could use some simple vector math to better select a subsample (if we save all of them along with their confidences (instead of errors)). Confidence seems directly correlated with image overlap...
+A lot of points are by default exported (1 for every image pixel, with a percentage filtered out based on confidence threshold). Would be interesting to see the confidence threshold and play around with it... We have way too many points compared to the number of eventual gaussians. Definitely need a smarter way to select the generated number of points. However, these points are highly not geographically spread out... Maybe we could use some simple vector math to better select a subsample (if we save all of them along with their confidences (instead of errors)). Confidence seems directly correlated with image overlap...
+Pointcloud confidence thresholding is used for the submap creation and alignment process, so better to downsample the points afterwards I think.
 
 I assume the future of VGGT type models is to output directly gaussians. Because right now the pointcloud outputs really struggle with reflective surfaces.
 
