@@ -1,6 +1,7 @@
 import os
 import glob
 import argparse
+import time
 
 import numpy as np
 import torch
@@ -121,10 +122,14 @@ def main():
     # Export COLMAP format if requested
     if args.colmap_output:
         print(f"Exporting COLMAP format to {args.colmap_output}")
+        start_time = time.time()
         solver.map.write_colmap_format(
             output_dir=args.colmap_output,
             image_names=image_names,  # Pass original image names for better file names
         )
+        end_time = time.time()
+        export_time = end_time - start_time
+        print(f"COLMAP export completed in {export_time:.2f} seconds")
 
     if args.plot_focal_lengths:
         # Define a colormap
