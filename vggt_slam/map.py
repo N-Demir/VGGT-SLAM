@@ -78,10 +78,18 @@ class GraphMap:
 
     def write_poses_to_file(self, file_name):
         with open(file_name, "w") as f:
-            for submap in self.ordered_submaps_by_key():
+            for i, submap in enumerate(self.ordered_submaps_by_key()):
                 poses = submap.get_all_poses_world(ignore_loop_closure_frames=True)
                 frame_ids = submap.get_frame_ids()
                 assert len(poses) == len(frame_ids), "Number of provided poses and number of frame ids do not match"
+                
+                # For all submaps except the last one, exclude the last overlapping frame
+                # For the last submap, include all frames
+                if i < len(self.submaps) - 1:
+                    # Exclude the last frame (which overlaps with the next submap)
+                    poses = poses[:-1]
+                    frame_ids = frame_ids[:-1]
+                
                 for frame_id, pose in zip(frame_ids, poses):
                     x, y, z = pose[0:3, 3]
                     rotation_matrix = pose[0:3, 0:3]
@@ -133,11 +141,18 @@ class GraphMap:
         image_id = 1
         point_id = 1
         
-        for submap in self.ordered_submaps_by_key():
+        for j, submap in enumerate(self.ordered_submaps_by_key()):
             # Get camera poses and intrinsics
             poses = submap.get_all_poses_world(ignore_loop_closure_frames=True)
             frame_ids = submap.get_frame_ids()
             intrinsics = submap.vggt_intrinscs
+
+            # For all submaps except the last one, exclude the last overlapping frame
+            # For the last submap, include all frames
+            if j < len(self.submaps) - 1:
+                # Exclude the last frame (which overlaps with the next submap)
+                poses = poses[:-1]
+                frame_ids = frame_ids[:-1]
             
             # Get image names
             if image_names is None:

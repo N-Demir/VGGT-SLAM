@@ -1,3 +1,10 @@
+# Install, outputs, submodules, etc.
+gtsam/
+office_loop_images/
+poses.txt
+salad/
+vggt/
+
 */*.npz
 debug*/
 .hydra/
