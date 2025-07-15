@@ -223,8 +223,8 @@ class GraphMap:
             except Exception as e:
                 print(f"Warning: Could not process point cloud for submap {submap.get_id()}: {e}")
         
-        # Write COLMAP model using read_write_model functions (always text format)
-        write_model(cameras, images, points3D, output_dir, ext=".txt")
+        # Write COLMAP model using read_write_model functions
+        write_model(cameras, images, points3D, output_dir)
         
         print(f"COLMAP format exported to {output_dir}")
         print(f"  - {len(cameras)} cameras")
