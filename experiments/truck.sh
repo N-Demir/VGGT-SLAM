@@ -1,0 +1,1 @@
+python main.py --image_folder=/root/data/tandt/truck/images --colmap_output=/root/output/truck_vggt_slam
