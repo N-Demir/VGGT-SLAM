@@ -186,18 +186,12 @@ class GraphMap:
             try:
                 pointclouds, frame_ids_pc, conf_masks = submap.get_points_list_in_world_frame(ignore_loop_closure_frames=True)
                 
-                for frame_idx, (pointcloud, frame_id_pc, conf_mask) in enumerate(zip(pointclouds, frame_ids_pc, conf_masks)):
-                    # Apply confidence mask to filter points
-                    valid_mask = conf_mask >= submap.get_conf_threshold()
-                    
-                    if not np.any(valid_mask):
-                        continue
-                    
+                for frame_idx, (pointcloud, frame_id_pc, conf_mask) in enumerate(zip(pointclouds, frame_ids_pc, conf_masks)):                    
                     # Get valid points and colors
-                    points = pointcloud[valid_mask].reshape(-1, 3)
+                    points = pointcloud[conf_mask].reshape(-1, 3)
                     
                     # Get colors for this frame (assuming colors are stored in submap)
-                    colors = submap.colors[frame_idx][valid_mask].reshape(-1, 3)
+                    colors = submap.colors[frame_idx][conf_mask].reshape(-1, 3)
                     
                     # Add all points
                     for point, color in zip(points, colors):
