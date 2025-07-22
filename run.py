@@ -138,6 +138,7 @@ def run_shell_script(shell_file_path: str):
 )
 def run(capture_name: str):
     print(f"Running vggt-slam on {capture_name}")
+    print("Testing if this updates post deploy")
     subprocess.run(f"python main.py --image_folder=/root/data/{capture_name}/images --log_results --colmap_output=/root/data/{capture_name}/sparse/0", shell=True)
 
 
