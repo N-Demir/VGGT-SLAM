@@ -117,12 +117,9 @@ def run_server(q):
 
 @app.function(
     timeout=3600 * 24,
-    gpu="A100-80GB",
-    secrets=[modal.Secret.from_name("wandb-secret"), modal.Secret.from_name("github-token")],
-    volumes={
-             "/root/data": modal.Volume.from_name("data", create_if_missing=True),
-             "/root/output": modal.Volume.from_name("output", create_if_missing=True),
-             "/root/ever_training": modal.Volume.from_name("ever-training", create_if_missing=True)}
+    gpu="T4",
+    secrets=MODAL_SECRETS,
+    volumes=MODAL_VOLUMES
 )
 def run_shell_script(shell_file_path: str):
     """Run a shell script on the remote Modal instance."""
@@ -131,6 +128,17 @@ def run_shell_script(shell_file_path: str):
     subprocess.run("bash " + shell_file_path, 
                   shell=True, 
                   cwd=".")
+
+
+@app.function(
+    timeout=3600,
+    gpu="T4",
+    secrets=MODAL_SECRETS,
+    volumes=MODAL_VOLUMES,
+)
+def run(capture_name: str):
+    print(f"Running vggt-slam on {capture_name}")
+    subprocess.run(f"python main.py --image_folder=/root/data/{capture_name}/images --log_results --colmap_output=/root/output/{capture_name}_vggt_slam", shell=True)
 
 
 @app.local_entrypoint()
