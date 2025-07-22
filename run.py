@@ -138,7 +138,7 @@ def run_shell_script(shell_file_path: str):
 )
 def run(capture_name: str):
     print(f"Running vggt-slam on {capture_name}")
-    subprocess.run(f"python main.py --image_folder=/root/data/{capture_name}/images --log_results --colmap_output=/root/output/{capture_name}_vggt_slam", shell=True)
+    subprocess.run(f"python main.py --image_folder=/root/data/{capture_name}/images --log_results --colmap_output=/root/data/{capture_name}/sparse/0", shell=True)
 
 
 @app.local_entrypoint()
