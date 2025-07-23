@@ -8,9 +8,11 @@ import time
 import modal
 
 MODAL_SECRETS = [modal.Secret.from_name("wandb-secret"), modal.Secret.from_name("github-token")]
+data_volume = modal.Volume.from_name("data", create_if_missing=True) 
+output_volume = modal.Volume.from_name("output", create_if_missing=True)
 MODAL_VOLUMES = {
-    "/root/data": modal.Volume.from_name("data", create_if_missing=True),
-    "/root/output": modal.Volume.from_name("output", create_if_missing=True),
+    "/root/data": data_volume,
+    "/root/output": output_volume,
 }
 
 def dummy_function():
@@ -137,8 +139,10 @@ def run_shell_script(shell_file_path: str):
     volumes=MODAL_VOLUMES,
 )
 def run(capture_name: str):
+    data_volume.reload()
     print(f"Running vggt-slam on {capture_name}")
     subprocess.run(f"python main.py --image_folder=/root/data/{capture_name}/images --log_results --colmap_output=/root/data/{capture_name}/sparse/0", shell=True)
+    data_volume.commit()
 
 
 @app.local_entrypoint()
