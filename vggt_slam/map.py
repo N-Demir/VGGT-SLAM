@@ -122,7 +122,7 @@ class GraphMap:
         pcd_all.colors = o3d.utility.Vector3dVector(colors_all)
         o3d.io.write_point_cloud(file_name, pcd_all)
 
-    def write_colmap_format(self, output_dir, image_names=None, max_points=10_000_000):
+    def write_colmap_format(self, output_dir, image_names=None, max_points=1_000_000):
         """
         Export reconstruction in COLMAP format using read_write_model.py functions.
         Uses the same strategy as save_framewise_pointclouds for point cloud processing.
