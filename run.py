@@ -141,7 +141,7 @@ def run_shell_script(shell_file_path: str):
 def run(capture_name: str):
     data_volume.reload()
     print(f"Running vggt-slam on {capture_name}")
-    subprocess.run(f"python main.py --image_folder=/root/data/{capture_name}/images --log_results --colmap_output=/root/data/{capture_name}/sparse/0", shell=True)
+    subprocess.run(f"python main.py --image_folder=/root/data/{capture_name}/images --log_results --colmap_output=/root/data/{capture_name}/sparse_vggt_slam/0", shell=True)
     data_volume.commit()
 
 
